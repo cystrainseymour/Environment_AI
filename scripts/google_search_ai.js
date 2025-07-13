@@ -16,7 +16,6 @@ function findAIOverview() {
 
 function getLength(overview){
 	var length = overview.innerText.length;
-	console.log(length);
 	for (let span of overview.querySelectorAll("span")){
 		if (span.innerText.includes("Show all")) {
 			var match = span.parentElement.parentElement.parentElement.parentElement.parentElement
@@ -75,7 +74,6 @@ function main(){
 	var overview = findAIOverview();
 	var length = getLength(overview);
 	display(overview, length);
-	console.log(length);
 }
 
 main();
