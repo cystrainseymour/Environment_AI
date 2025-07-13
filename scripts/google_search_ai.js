@@ -4,20 +4,20 @@ const GCarbonPerKWH = 480;
 const PercCleanEnergy = 0.64;
 
 function findAIOverview() {
-	var match;
+	let match;
 	for (let h1 of document.querySelectorAll("h1")) {
 		if (h1.textContent.includes("Search Results")) {
 			match = h1;
 			break;
 		}
 	}
-	var overview = match.nextSibling.nextSibling;
+	let overview = match.nextSibling.nextSibling;
 	return overview;
 }
 
 function getLength(overview){
-	var allText = overview.innerText;
-	var groundingLinksText;
+	let allText = overview.innerText;
+	let groundingLinksText;
 	
 	for (let span of overview.querySelectorAll("span")){
 		if (span.innerText.includes("Show all")) {
@@ -27,16 +27,16 @@ function getLength(overview){
 		}
 	}
 	
-	var allWords = allText.split(" ").length;
-	var groundingLinksWords = groundingLinksText.split(" ").length;)
+	let allWords = allText.split(" ").length;
+	let groundingLinksWords = groundingLinksText.split(" ").length;)
 	
-	var genWords = allWords - groundingLinksWords;
+	let genWords = allWords - groundingLinksWords;
 	
 	return genWords * AveTokensPerWord;
 }
 
 function calculateEnergy(length){
-	var nfObject = new Intl.NumberFormat('en-US');
+	let nfObject = new Intl.NumberFormat('en-US');
 	return nfObject.format(Math.round(KWHPerToken * length));
 }
 
@@ -49,19 +49,19 @@ function calculateWater(length){
 }
 
 function createInfoBox(length){
-	var energy = calculateEnergy(length);
-	var carbon = calculateCarbon(length);
-	var water = calculateWater(length);
+	let energy = calculateEnergy(length);
+	let carbon = calculateCarbon(length);
+	let water = calculateWater(length);
 	
-	var infoText = energy + " ⚡ | " + carbon + " ⛽ | " + water + " 💧"
+	let infoText = energy + " ⚡ | " + carbon + " ⛽ | " + water + " 💧"
 	
-	var infoBox = document.createElement("div");
+	let infoBox = document.createElement("div");
 	infoBox.innerText = infoText;
 	return infoBox;
 }
 
 function findDisplayLocation(overview){
-	var loc;
+	let loc;
 	for (let strong of overview.querySelectorAll("strong")){
 		if (strong.innerText.includes("AI Overview")) {
 			loc = strong.parentElement.parentElement.parentElement.childNodes[0]
@@ -72,16 +72,25 @@ function findDisplayLocation(overview){
 }
 
 function display(overview, length){
-	var infoBox = createInfoBox(length);
-	var loc = findDisplayLocation(overview);
-	var infoBox = createInfoBox(length);
+	let infoBox = createInfoBox(length);
+	let loc = findDisplayLocation(overview);
+	let infoBox = createInfoBox(length);
 	loc.after(infoBox);
 }
 
 function main(){
-	var overview = findAIOverview();
-	var length = getLength(overview);
+	let overview = findAIOverview();
+	let length = getLength(overview);
 	display(overview, length);
+	
+	const config = {characterData: true}
+	
+	const observer = new MutationObserver(function {
+		length = getLength(overview);
+		display(overview, length);
+	});
+	
+	observer.observe(overview, config);
 }
 
 main();
