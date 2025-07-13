@@ -1,3 +1,4 @@
+const AveTokensPerWord = 1.33;
 const KWHPerToken = 993.7660132;
 const GCarbonPerKWH = 480;
 const PercCleanEnergy = 0.64;
@@ -11,20 +12,27 @@ function findAIOverview() {
 		}
 	}
 	var overview = match.nextSibling.nextSibling;
-	return overview
+	return overview;
 }
 
 function getLength(overview){
-	var length = overview.innerText.length;
+	var allText = overview.innerText;
+	var groundingLinksText;
+	
 	for (let span of overview.querySelectorAll("span")){
 		if (span.innerText.includes("Show all")) {
 			var match = span.parentElement.parentElement.parentElement.parentElement.parentElement
-			length -= match.innerText.length;
+			groundingLinksText = match.innerText;
 			break;
 		}
 	}
 	
-	return length;
+	var allWords = allText.split(" ").length;
+	var groundingLinksWords = groundingLinksText.split(" ").length;)
+	
+	var genWords = allWords - groundingLinksWords;
+	
+	return genWords * AveTokensPerWord;
 }
 
 function calculateEnergy(length){
