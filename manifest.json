@@ -1,11 +1,11 @@
 {
 "name": "Environment AI",
-"description": "Base Level Extension",
+"description": "Chrome extension to see the environmental impact of common AI tools, such as in search results AI, as well as ChatGPT, Google Gemini, GitHub CoPilot, etc.",
 "version": "1.0",
 "manifest_version": 3,
 "action": {
 	"default_popup": "index.html",
-	"default_icon": "assets/hello.png"
+	"default_icon": "assets/earth.png"
 	},
 "content_scripts": [
 		{
