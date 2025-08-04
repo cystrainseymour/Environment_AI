@@ -13,6 +13,18 @@
 			"matches": [
 				"https://www.google.com/search?*"
 				]
+		},
+		{
+			"js": ["scripts/chat_gpt.js"],
+			"matches": [
+				"https://chatgpt.com/",
+				"https://chatgpt.com/c/*", 
+				"https://chatgpt.com/?model=*"
+				]
 		}
-	]
+	],
+"background": {
+	"service worker": "scripts/background.js",
+	"type": "module"
+	}
 }
