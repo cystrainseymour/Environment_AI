@@ -1,6 +1,6 @@
 const AveTokensPerWord = 1.33;
-const KWHPerToken = 993.7660132;
-const GCarbonPerKWH = 480;
+const WHPerToken = 0.9937660132;
+const GCarbonPerWH = 0.48;
 const PercCleanEnergy = 0.64;
 
 function findAIOverview() {
@@ -28,7 +28,7 @@ function getLength(overview){
 	}
 	
 	let allWords = allText.split(" ").length;
-	let groundingLinksWords = groundingLinksText.split(" ").length;)
+	let groundingLinksWords = groundingLinksText.split(" ").length;
 	
 	let genWords = allWords - groundingLinksWords;
 	
@@ -37,11 +37,11 @@ function getLength(overview){
 
 function calculateEnergy(length){
 	let nfObject = new Intl.NumberFormat('en-US');
-	return nfObject.format(Math.round(KWHPerToken * length));
+	return nfObject.format(Math.round(WHPerToken * length));
 }
 
 function calculateCarbon(length){
-	return Math.round(KWHPerToken * PercCleanEnergy * length / GCarbonPerKWH);
+	return Math.round(WHPerToken * (1-PercCleanEnergy) * length / GCarbonPerWH);
 }
 
 function calculateWater(length){
@@ -74,7 +74,6 @@ function findDisplayLocation(overview){
 function display(overview, length){
 	let infoBox = createInfoBox(length);
 	let loc = findDisplayLocation(overview);
-	let infoBox = createInfoBox(length);
 	loc.after(infoBox);
 }
 
@@ -85,7 +84,7 @@ function main(){
 	
 	const config = {characterData: true}
 	
-	const observer = new MutationObserver(function {
+	const observer = new MutationObserver(() => {
 		length = getLength(overview);
 		display(overview, length);
 	});
@@ -94,3 +93,4 @@ function main(){
 }
 
 main();
+console.log("done");
