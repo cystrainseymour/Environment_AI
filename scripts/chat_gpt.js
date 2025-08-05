@@ -89,12 +89,6 @@ function full(responseArea) {
 			return [length, nImages];
 		}).then((length_vec) => {
 			display(length_vec);
-			const config = {characterData: true};
-			const observer = new MutationObserver(function() {
-				length = getLength(responseArea);
-				display(length_vec);
-			});
-			observer.observe(responseArea, config);
 		});
 	});
 }
