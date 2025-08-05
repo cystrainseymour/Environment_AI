@@ -1,5 +1,6 @@
 const AveTokensPerWord = 1.33;
 const Mini4o_WHPerToken = 0.00012;
+const Mini4o_WHPerImage = 0.06036363636;
 const GCarbonPerWH = 0.48;
 const PercCleanEnergy = 0;
 
@@ -29,23 +30,29 @@ function findText() {
 	return mainArea;
 }
 	
-function calculateEnergy(length){
+function calculateEnergy(length_vec){
+	let [length, nImages] = length_vec;
+	
 	let nfObject = new Intl.NumberFormat('en-US');
-	return nfObject.format((Mini4o_WHPerToken * length).toFixed(2));
+	return nfObject.format((Mini4o_WHPerToken * length + Mini4o_WHPerImage * nImages).toFixed(2));
 }
 
-function calculateCarbon(length){
-	return (Mini4o_WHPerToken * (1-PercCleanEnergy) * length / GCarbonPerWH).toFixed(2);
+function calculateCarbon(length_vec){
+	let [length, nImages] = length_vec;
+	
+	return ((1-PercCleanEnergy) * (Mini4o_WHPerToken *  length + Mini4o_WHPerImage * nImages) / GCarbonPerWH).toFixed(2);
 }
 
-function calculateWater(length){
+function calculateWater(length_vec){
+	let [length, nImages] = length_vec;
+	
 	return Math.round(0);
 }
 
-function createInfoBox(length){
-	let energy = calculateEnergy(length);
-	let carbon = calculateCarbon(length);
-	let water = calculateWater(length);
+function createInfoBox(length_vec){
+	let energy = calculateEnergy(length_vec);
+	let carbon = calculateCarbon(length_vec);
+	let water = calculateWater(length_vec);
 	
 	let infoText = "\t" + energy + " ⚡ | " + carbon + " ⛽ | " + water + " 💧"
 	
@@ -59,8 +66,8 @@ function findDisplayLocation(){
 	return loc;
 }
 
-function display(length){
-	let infoBox = createInfoBox(length);
+function display(length_vec){
+	let infoBox = createInfoBox(length_vec);
 	let loc = findDisplayLocation();
 	loc.after(infoBox);
 	
@@ -74,15 +81,21 @@ function full(responseArea) {
 				responseLength += resp.nextSibling.innerText.split(" ").length;
 			}
 		}
+		
 		return AveTokensPerWord * responseLength;
 	}).then((length) => {
-		display(length);
-			const config = {characterData: true}
+		waitForElm(responseArea, "img").then((elm) => {
+			let nImages = responseArea.querySelectorAll("img").length;
+			return [length, nImages];
+		}).then((length_vec) => {
+			display(length_vec);
+			const config = {characterData: true};
 			const observer = new MutationObserver(function() {
-			length = getLength(responseArea);
-			display(responseArea, length);
-		});
+				length = getLength(responseArea);
+				display(length_vec);
+			});
 			observer.observe(responseArea, config);
+		});
 	});
 }
 
