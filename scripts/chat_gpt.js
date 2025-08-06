@@ -1,7 +1,7 @@
 const AveTokensPerWord = 1.33;
-const Mini4o_WHPerToken = 0.00012;
+const Mini4o_WHPerToken = 0.0012;
 const Mini4o_WHPerImage = 0.06036363636;
-const GCarbonPerWH = 0.48;
+const GCarbonPerWH = 0.3674098;
 const PercCleanEnergy = 0;
 
 function waitForElm(area, selector) {
@@ -40,7 +40,7 @@ function calculateEnergy(length_vec){
 function calculateCarbon(length_vec){
 	let [length, nImages] = length_vec;
 	
-	return ((1-PercCleanEnergy) * (Mini4o_WHPerToken *  length + Mini4o_WHPerImage * nImages) / GCarbonPerWH).toFixed(2);
+	return ((1-PercCleanEnergy) * (Mini4o_WHPerToken *  length + Mini4o_WHPerImage * nImages) * GCarbonPerWH).toFixed(2);
 }
 
 function calculateWater(length_vec){

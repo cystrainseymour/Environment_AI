@@ -1,6 +1,6 @@
 const AveTokensPerWord = 1.33;
-const WHPerToken = 0.9937660132;
-const GCarbonPerWH = 0.48;
+const WHPerToken = 3.228008552;
+const GCarbonPerWH = 0.3674098;
 const PercCleanEnergy = 0.64;
 
 function findAIOverview() {
@@ -41,7 +41,7 @@ function calculateEnergy(length){
 }
 
 function calculateCarbon(length){
-	return Math.round(WHPerToken * (1-PercCleanEnergy) * length / GCarbonPerWH);
+	return Math.round(WHPerToken * (1-PercCleanEnergy) * length * GCarbonPerWH);
 }
 
 function calculateWater(length){
